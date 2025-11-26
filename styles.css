@@ -583,10 +583,14 @@ footer .btn-outline-light { padding: .35rem .5rem; border-radius: .35rem; }
 	/* add explicit spacing between logos (desktop) */
 	margin: 0.6rem 2rem;
 	flex: 0 0 auto; /* don't stretch logos */
+	/* subtle default shadow so logos sit above the background */
+	box-shadow: 0 8px 20px rgba(0,0,0,0.10);
 }
 .list-sponsor .sponsor-logo:hover{
 	transform: translateY(-6px) scale(1.06);
 	filter: brightness(1.04);
+	/* stronger shadow on hover for tactile depth */
+	box-shadow: 0 22px 60px rgba(0,0,0,0.16);
 }
 
 @media (max-width: 768px){
