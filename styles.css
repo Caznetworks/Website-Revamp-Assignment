@@ -35,31 +35,32 @@ body.page-bg{
 	content: '';
 	position: fixed;
 	inset: 0;
-	.contact-card {
-		border-radius: 10px;
-		overflow: hidden;
-	}
-
-	.contact-card .card-body {
-		padding: 1.25rem 1.5rem;
-	}
-
-	.contact-card .map-iframe {
-		width: 100%;
-		height: 180px;
-		border: 0;
-	}
-
 	background: rgba(0,0,0,0.35);
 	pointer-events: none;
 	z-index: 0;
+}
+
+/* contact-card styles (must not be nested inside pseudo-element) */
+.contact-card {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.contact-card .card-body {
+    padding: 1.25rem 1.5rem;
+}
+
+.contact-card .map-iframe {
+    width: 100%;
+    height: 180px;
+    border: 0;
 }
 
 /* A simple centered hero area that sits above the background */
 .hero{
 	position: relative;
 	z-index: 1; /* stay above overlay */
-	min-height: 100vh;
+	min-height: 90vh;
 	display:flex;
 	align-items:center;
 	justify-content:center;
@@ -87,6 +88,51 @@ body.page-bg{
 .hero .hero-intro .btn.pulse{ animation: heroPulse 3000ms ease-in-out infinite; }
 .hero .hero-intro .btn:hover, .hero .hero-intro .btn:focus { transform: translateY(0) scale(1.05); }
 
+/* Hero CTA: transparent white outline that fills on hover */
+.hero .hero-intro .btn.btn-primary{
+	background: transparent;
+	color: #fff;
+	border: 2px solid rgba(255,255,255,0.95);
+	padding: 0.65rem 1.25rem;
+	border-radius: 8px;
+	position: relative;
+	overflow: hidden;
+	z-index: 0; /* stacking base for pseudo-element behind */
+	transition: color 260ms ease, transform 200ms ease, border-color 200ms ease;
+}
+
+.hero .hero-intro .btn.btn-primary::before{
+	content: '';
+	position: absolute;
+	left: 0; top: 0; right: 0; bottom: 0;
+	background: #fff;
+	transform: scaleX(0);
+	transform-origin: left center;
+	transition: transform 320ms cubic-bezier(.2,.9,.2,1);
+	z-index: -1; /* place the white fill behind the button content */
+	opacity: 0.98;
+}
+
+.hero .hero-intro .btn.btn-primary:hover::before,
+.hero .hero-intro .btn.btn-primary:focus::before{
+	transform: scaleX(1);
+}
+
+.hero .hero-intro .btn.btn-primary:hover,
+.hero .hero-intro .btn.btn-primary:focus{
+	color: #000; /* dark text on white fill */
+	border-color: rgba(255,255,255,0.95);
+}
+
+/* Ensure button label stays above pseudo-element (if there are child elements) */
+.hero .hero-intro .btn.btn-primary *{ position: relative; z-index: 1 }
+
+/* Respect user's reduced motion preference */
+@media (prefers-reduced-motion: reduce){
+	.hero .hero-intro .btn.btn-primary::before{ transition: none; transform: none; opacity: 1 }
+	.hero .hero-intro .btn.btn-primary{ transition: none }
+}
+
 .hero p{
     color: rgba(255,255,255,0.92);
 }
@@ -95,33 +141,35 @@ body.page-bg{
 .hero-image{
 	display:block;
 	width:100%;
-	height: 560px; /* increased so search card can sit inside the image */
+	height:100%;
+	min-height: clamp(320px, 36vh, 560px); /* responsive height */
 	object-fit: cover;
-	filter: blur(4px); /* mild background blur */
-	transform: scale(1.03); /* avoid visible edges after blur */
-	.contact-card .whatsapp-btn {
-		background: #25D366;
-		color: #fff;
-		padding: 0.45rem 0.6rem;
-		border-radius: 6px;
-		text-decoration: none;
-	}
-
-	.contact-card .whatsapp-btn svg { filter: none; }
-
-	.contact-card .btn-send {
-		min-width: 150px;
-		color: #333333 !important;
-	}
-
-	.map-wrapper { padding: 0; }
-
-	/* small alert area for form */
-	#contactAlert .alert { margin-bottom: 0.75rem; }
-
+	filter: blur(3px); /* mild background blur */
+	transform: scale(1.02);
 	transition: filter 250ms ease, transform 250ms ease;
 	will-change: filter, transform;
 }
+
+/* keep contact-card related rules outside the hero image block */
+.contact-card .whatsapp-btn {
+	background: #25D366;
+	color: #fff;
+	padding: 0.45rem 0.6rem;
+	border-radius: 6px;
+	text-decoration: none;
+}
+
+.contact-card .whatsapp-btn svg { filter: none; }
+
+.contact-card .btn-send {
+	min-width: 150px;
+	color: #333333 !important;
+}
+
+.map-wrapper { padding: 0; }
+
+/* small alert area for form */
+#contactAlert .alert { margin-bottom: 0.75rem; }
 
 /* framed image section */
 .image-section .image-frame{
@@ -133,7 +181,7 @@ body.page-bg{
 	box-shadow: 0 12px 40px rgba(0,0,0,0.18);
 	position: relative; /* ensure absolutely positioned children anchor here */
 	z-index: 1;
-	min-height: 560px; /* ensure frame tall enough to hold image + card */
+	min-height: clamp(360px, 42vh, 640px); /* responsive frame height */
 }
 
 /* Slight dark overlay above the hero image to increase contrast */
@@ -185,13 +233,16 @@ body.page-bg{
 
 /* Search button style (pill) */
 .search-btn{
-	background: rgba(0,0,0,0.06);
-	color: #6c757d;
-	border-radius: 50px;
-	padding: 1rem 2rem;
-	font-weight: 600;
+	/* border-only default (light) */
+	background: transparent;
+	color: #111;
+	border-radius: 8px; /* rectangular corners */
+	padding: 0.45rem 0.9rem;
+	font-weight: 700;
+	border: 1px solid rgba(0,0,0,0.08); /* light border */
+	box-shadow: none;
+	transition: background 220ms ease, transform 120ms ease, color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
 }
-
 /* Search card styling */
 .search-card{
 	background: rgba(255,255,255,0.95);
@@ -203,8 +254,9 @@ body.page-bg{
 	position: absolute;
 	left: 50%;
 	transform: translateX(-50%);
-	bottom: 32px; /* sit inside the image instead of overlapping outside */
-	padding: 1rem 1.25rem;
+	/* reduce bottom gap so the card sits a bit higher */
+	bottom: 16px; /* sit inside the image instead of overlapping outside */
+	padding: 0.75rem 1rem; /* slightly tighter padding */
 	z-index: 5; /* above the image */
 }
 .search-card .form-label{
@@ -311,18 +363,87 @@ body.page-bg{
 @media (max-width: 992px){
 	.hero-image{height: 460px;}
 	.image-section .image-frame{min-height: 460px}
-	.search-card{width: calc(100% - 2rem); bottom: 20px; padding: 0.75rem}
+	.search-card{width: calc(100% - 2rem); bottom: 14px; padding: 0.75rem}
 }
 
 @media (max-width: 576px){
 	/* on small screens reduce spacing and scale inputs so everything fits inside */
 	.hero-image{height: 420px}
 	.image-section .image-frame{min-height: 420px}
-	.search-card{width: calc(100% - 1.5rem); bottom: 14px; padding: 0.6rem}
+	.search-card{width: calc(100% - 1.5rem); bottom: 10px; padding: 0.5rem}
 	.search-card .form-select,
 	.search-card .form-control{font-size: 0.95rem; padding-top:0.6rem; padding-bottom:0.6rem}
 	.search-card .form-label{font-size:0.85rem}
 	.search-card .btn{padding:0.6rem 0.8rem}
+
+	/* Make search button auto width on md+ and keep 100% on smaller screens
+	   We use a small utility class `w-md-auto` applied as `w-md-auto` (here implemented
+	   as `.w-md-auto` combined with `.w-100` on the element). */
+
+
+
+
+
+
+}
+
+/* Utility: make element width auto on md+ viewports (use together with `w-100` on smaller screens) */
+@media (min-width: 768px){
+    .w-md-auto { width: auto !important; }
+}
+
+	/* Hover state: slightly darker gray and small lift */
+	.search-btn:hover,
+	.search-btn:focus{
+		background: #e9ecef; /* fill on hover */
+		transform: translateY(-2px);
+		color: #000;
+		border-color: rgba(0,0,0,0.14);
+		box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+	}
+
+	/* keyboard focus for accessibility */
+	.search-btn:focus-visible{
+		outline: 3px solid rgba(66,133,244,0.14);
+		outline-offset: 2px;
+	}
+
+
+
+/* Make the search card responsive: on small/medium screens let it flow beneath the image
+   instead of absolutely overlapping it. Uses Bootstrap md breakpoint (992px). */
+@media (max-width: 991.98px) {
+	.image-frame {
+		/* allow the search card to be visible outside the image on small screens */
+		overflow: visible;
+		min-height: auto;
+		padding-bottom: 0.5rem;
+	}
+
+	.image-frame > .overlay-title{
+		top: 8%;
+		font-size: clamp(1rem, 3vw, 1.4rem);
+		left: 50%;
+		transform: translateX(-50%);
+	}
+
+	.search-card{
+		position: static !important;
+		left: auto !important;
+		transform: none !important;
+		bottom: auto !important;
+		margin: 0.9rem auto 0 auto;
+		width: calc(100% - 1.5rem);
+		max-width: 980px;
+		box-shadow: 0 18px 50px rgba(0,0,0,0.08);
+		border-radius: 10px;
+	}
+
+	/* slightly reduce hero image height on very small screens to save vertical space */
+	@media (max-width: 420px){
+		.hero-image{height: 320px}
+		.image-frame > .overlay-title{top:6%}
+	}
 }
 
 /* Utility: center content for demos */
@@ -564,3 +685,26 @@ footer .btn-outline-light { padding: .35rem .5rem; border-radius: .35rem; }
 /* Modal image centering and rounded-profile support */
 .modal-body{display:flex;align-items:center;justify-content:center;padding:1rem}
 #imageModalImg.rounded-modal{border-radius:50%;max-width:420px;width:100%;height:auto;box-shadow:none}
+
+/* Background image for the top image section (non-black variant) */
+.image-section{
+	position: relative; /* anchor overlay */
+	background-image: url('assets/search.jfif');
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+/* darken the section background slightly so the centered frame stands out */
+.image-section::before{
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: rgba(0,0,0,0.28);
+	z-index: 0; /* sits below .image-frame which has z-index:1 */
+	pointer-events: none;
+}
+
+/* ensure the framed content sits above the section overlay */
+.image-section .image-frame{ position: relative; z-index: 1 }
+
