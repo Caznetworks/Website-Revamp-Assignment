@@ -1,0 +1,566 @@
+/* mains navbar styles to complement Bootstrap */
+:root{
+	--accent: #0d6efd; /* Bootstrap primary */
+	--muted: #6c757d;
+	--bg-image: url('assets/bg1.jpg'); /* default local background image path (change as needed) */
+	--bg-size: cover;
+	--bg-position: center center;
+	--font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+	--heading-font: 'Poppins', 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+body{
+	font-family: var(--font-family);
+	margin:0;
+	background:#fff;
+	color:#111;
+}
+
+/* Use Poppins for display headings and brand */
+h1,h2,h3,h4,h5,h6,
+.mains-navbar .navbar-brand,
+.image-frame .overlay-title{font-family: var(--heading-font);}
+
+/* Page background image (applies to body). Use --bg-image to override. */
+body.page-bg{
+	background-image: var(--bg-image);
+	background-size: var(--bg-size);
+	background-position: var(--bg-position);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+}
+
+/* Optional translucent overlay for better text contrast */
+.bg-overlay::before{
+	content: '';
+	position: fixed;
+	inset: 0;
+	.contact-card {
+		border-radius: 10px;
+		overflow: hidden;
+	}
+
+	.contact-card .card-body {
+		padding: 1.25rem 1.5rem;
+	}
+
+	.contact-card .map-iframe {
+		width: 100%;
+		height: 180px;
+		border: 0;
+	}
+
+	background: rgba(0,0,0,0.35);
+	pointer-events: none;
+	z-index: 0;
+}
+
+/* A simple centered hero area that sits above the background */
+.hero{
+	position: relative;
+	z-index: 1; /* stay above overlay */
+	min-height: 100vh;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	padding: 6rem 1rem;
+	color: #fff;
+}
+
+.hero h1{
+    color: #fff;
+    letter-spacing: 0.6px;
+}
+
+/* Hero intro staggered reveal styles */
+.hero .hero-intro p,
+.hero .hero-intro h1,
+.hero .hero-intro .btn{
+	opacity: 0;
+	transform: translateY(12px);
+	transition: opacity 520ms ease, transform 520ms cubic-bezier(.2,.9,.2,1);
+}
+.hero .hero-intro .in-view-hero{opacity:1; transform: none}
+
+/* gentle CTA pulse (non-distracting) */
+@keyframes heroPulse { 0%{ transform: scale(1)} 50%{ transform: scale(1.035)} 100%{ transform: scale(1)} }
+.hero .hero-intro .btn.pulse{ animation: heroPulse 3000ms ease-in-out infinite; }
+.hero .hero-intro .btn:hover, .hero .hero-intro .btn:focus { transform: translateY(0) scale(1.05); }
+
+.hero p{
+    color: rgba(255,255,255,0.92);
+}
+
+/* Full-width hero image styling */
+.hero-image{
+	display:block;
+	width:100%;
+	height: 560px; /* increased so search card can sit inside the image */
+	object-fit: cover;
+	filter: blur(4px); /* mild background blur */
+	transform: scale(1.03); /* avoid visible edges after blur */
+	.contact-card .whatsapp-btn {
+		background: #25D366;
+		color: #fff;
+		padding: 0.45rem 0.6rem;
+		border-radius: 6px;
+		text-decoration: none;
+	}
+
+	.contact-card .whatsapp-btn svg { filter: none; }
+
+	.contact-card .btn-send {
+		min-width: 150px;
+		color: #333333 !important;
+	}
+
+	.map-wrapper { padding: 0; }
+
+	/* small alert area for form */
+	#contactAlert .alert { margin-bottom: 0.75rem; }
+
+	transition: filter 250ms ease, transform 250ms ease;
+	will-change: filter, transform;
+}
+
+/* framed image section */
+.image-section .image-frame{
+	margin: 0 auto;
+	
+	border-radius: 6px;
+	overflow: hidden; /* keep child elements clipped inside the image */
+	width: 100%;
+	box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+	position: relative; /* ensure absolutely positioned children anchor here */
+	z-index: 1;
+	min-height: 560px; /* ensure frame tall enough to hold image + card */
+}
+
+/* Slight dark overlay above the hero image to increase contrast */
+.image-section .image-frame::after{
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.35); /* slightly darker */
+    z-index: 2;
+    pointer-events: none;
+    transition: background-color 220ms ease;
+}
+
+/* overlay content centered inside the image frame */
+.image-frame .image-overlay{
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	pointer-events: none; /* allow clicks through to image if needed */
+}
+.image-frame .overlay-title{
+	color: #fff;
+	font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+	font-weight: 700;
+	text-shadow: 0 8px 30px rgba(0,0,0,0.6);
+	letter-spacing: 0.6px;
+	padding: 0.25rem 0.6rem;
+	background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.18));
+	border-radius: 6px;
+}
+
+/* Support overlay title when it's placed directly inside .image-frame
+   (sometimes markup uses a wrapper `.image-overlay`, other times title is direct child) */
+.image-frame > .overlay-title{
+	position: absolute;
+	top: 18%;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 4;
+	pointer-events: none;
+	display: inline-block;
+	margin: 0;
+	padding: 0.35rem 0.6rem;
+	background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.18));
+	border-radius: 6px;
+}
+
+/* Search button style (pill) */
+.search-btn{
+	background: rgba(0,0,0,0.06);
+	color: #6c757d;
+	border-radius: 50px;
+	padding: 1rem 2rem;
+	font-weight: 600;
+}
+
+/* Search card styling */
+.search-card{
+	background: rgba(255,255,255,0.95);
+	border-radius: 12px;
+	max-width: 1100px;
+	width: calc(100% - 4rem);
+	box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+	/* place the card inside the bottom area of the image-frame */
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: 32px; /* sit inside the image instead of overlapping outside */
+	padding: 1rem 1.25rem;
+	z-index: 5; /* above the image */
+}
+.search-card .form-label{
+	color: #222;
+	font-weight: 500;
+}
+.search-card .form-select,
+.search-card .form-control{
+	border-radius: 28px;
+}
+.search-card .form-select:focus,
+.search-card .form-control:focus{
+	box-shadow: 0 6px 18px rgba(13,110,253,0.08);
+}
+
+/* if you want a colored border variant instead, change the border color */
+.image-section.alt .image-frame{
+	border-color: rgba(13,110,253,0.12);
+}
+
+/* Make the primary CTA in the hero white with accent text */
+.hero .btn-primary{
+	background: #fff;
+	color: #000; /* black text */
+	border: 1px solid rgba(0,0,0,0.08);
+	box-shadow: none;
+}
+.hero .btn-primary:hover,
+.hero .btn-primary:focus{
+	background: rgba(255,255,255,0.98);
+	color: #000;
+	transform: translateY(-1px);
+}
+
+/* Slightly smaller on small screens */
+@media (max-width: 576px){
+	.hero .btn-lg{
+		padding: 0.55rem 1rem;
+		font-size: 0.95rem;
+	}
+}
+
+.mains-navbar{
+	border-bottom: 1px solid rgba(0,0,0,0.06);
+	backdrop-filter: blur(6px);
+	position: relative;
+	z-index: 1030; /* ensure navbar sits above the page overlay */
+}
+
+.mains-navbar .navbar-brand{
+	color:var(--accent);
+	letter-spacing: 0.2px;
+}
+
+.mains-navbar .nav-link{
+	color:var(--muted);
+	padding: 0.4rem 0.6rem;
+	transition: color 160ms ease, transform 120ms ease;
+}
+
+.mains-navbar .nav-link:hover,
+.mains-navbar .nav-link:focus{
+	color:var(--accent);
+	transform: translateY(-1px);
+}
+
+.mains-navbar .navbar-toggler{
+	border: none;
+}
+
+.mains-navbar .navbar-toggler-icon{
+	filter: none; /* keep default */
+}
+
+/* subtle active indicator */
+.mains-navbar .nav-item .nav-link.active{
+	color:var(--accent);
+	position: relative;
+}
+
+.mains-navbar .nav-item .nav-link.active::after{
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -0.6rem;
+	height: 2px;
+	background: var(--accent);
+	border-radius:2px;
+}
+
+/* small screens: more compact spacing */
+@media (max-width: 576px){
+	.mains-navbar .navbar-brand{
+		font-size: 0.98rem;
+	}
+	.mains-navbar .nav-link{
+		padding: 0.35rem 0.5rem;
+		font-size: 0.95rem;
+	}
+}
+
+/* Responsive: stack/anchor search card on small viewports */
+@media (max-width: 992px){
+	.hero-image{height: 460px;}
+	.image-section .image-frame{min-height: 460px}
+	.search-card{width: calc(100% - 2rem); bottom: 20px; padding: 0.75rem}
+}
+
+@media (max-width: 576px){
+	/* on small screens reduce spacing and scale inputs so everything fits inside */
+	.hero-image{height: 420px}
+	.image-section .image-frame{min-height: 420px}
+	.search-card{width: calc(100% - 1.5rem); bottom: 14px; padding: 0.6rem}
+	.search-card .form-select,
+	.search-card .form-control{font-size: 0.95rem; padding-top:0.6rem; padding-bottom:0.6rem}
+	.search-card .form-label{font-size:0.85rem}
+	.search-card .btn{padding:0.6rem 0.8rem}
+}
+
+/* Utility: center content for demos */
+.container-main{padding:4rem 1rem; text-align:center}
+
+/* Solid black strip for sections that need a simple black bar */
+.image-section.black-strip{
+	background: #000;
+	color: #fff;
+	min-height: 120px; /* adjust height as needed */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.image-section.black-strip .container-fluid{
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+}
+
+/* Black strip content styling (Bootstrap-first) */
+.image-section.black-strip .blackstrip-photo{
+	max-width: 140px;
+	height: auto;
+	border: 3px solid rgba(255,255,255,0.12);
+	padding: 4px;
+	background: rgba(255,255,255,0.02);
+	cursor: pointer;
+}
+.image-section.black-strip .blackstrip-name{
+	color: #ffffff;
+	font-size: 1.4rem;
+	letter-spacing: 0.6px;
+}
+.image-section.black-strip .blackstrip-tag{
+	color: rgba(255,255,255,0.9);
+	font-weight: 500;
+}
+.image-section.black-strip .blackstrip-phone{
+	color: #fff;
+	font-weight: 600;
+}
+
+/* Ensure good spacing on small screens */
+@media (max-width: 767.98px){
+	.image-section.black-strip{padding-top: 0.5rem; padding-bottom: 0.5rem}
+	.image-section.black-strip .blackstrip-photo{max-width:100px}
+	.image-section.black-strip .blackstrip-name{font-size:1.1rem}
+	.image-section.black-strip .blackstrip-tag{font-size:0.98rem}
+}
+
+/* GET IT SOLD cards */
+.card-get h2{font-weight:700}
+/* keep the card-get container visually white (override page overlay) */
+.card-get{background:#ffffff}
+/* Make card titles bold for clearer hierarchy */
+.card-get .card-title{font-weight:700}
+.card-get .card{
+	border-radius:8px;
+	overflow:hidden;
+	transform: translateY(12px) scale(1);
+	opacity: 0;
+	/* subtle persistent shadow so cards sit above background */
+	box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+	transition: transform 360ms cubic-bezier(.2,.9,.2,1), box-shadow 200ms ease, opacity 300ms ease;
+}
+.card-get .card .card-img-top{height:200px; object-fit:cover; transition: transform 420ms ease, filter 420ms ease}
+.card-get .card-body{padding:1rem}
+
+/* animation: only when `.in-view` is added by JS */
+@keyframes slideUpFade{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.card-get .animate-card.in-view{animation-name:slideUpFade;animation-duration:600ms;animation-fill-mode:forwards;animation-timing-function:cubic-bezier(.2,.9,.2,1);animation-delay:var(--delay,0ms)}
+
+/* hover and focus effects */
+.card-get .card:hover{transform: translateY(0) scale(1.02); box-shadow: 0 24px 60px rgba(13,110,253,0.12)}
+.card-get .card:hover .card-img-top{transform: scale(1.06); filter: brightness(0.9)}
+
+/* subtle tilt effect container (JS will set transform on .card) */
+.card-get .card.tilt{transition: transform 120ms ease; will-change: transform}
+
+/* overlay badge on image */
+.card-get .card-img-top::after{content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.25)); pointer-events: none}
+
+/* ensure cards stretch equal height */
+.card-get .d-flex{display:flex}
+.card-get .d-flex .card{display:flex;flex-direction:column}
+.card-get .card .card-body{flex:1}
+
+@media (max-width: 576px){
+	.card-get .card .card-img-top{height:160px}
+}
+
+/* Footer styles */
+footer .btn-outline-light svg { display: block; }
+footer small { color: rgba(255,255,255,0.85); }
+footer .btn-outline-light { padding: .35rem .5rem; border-radius: .35rem; }
+
+/* New centered footer layout */
+.footer-icons a { color: #fff; opacity: 0.95; display: inline-flex; align-items: center; justify-content: center; }
+.footer-icons a:hover { opacity: 1; transform: translateY(-2px); }
+.footer-copy { display: block; font-size: 12px; letter-spacing: 1px; color: rgba(255,255,255,0.85); }
+.footer-divider { margin-left: auto; margin-right: auto; }
+@media (max-width: 575px) {
+	footer .container { gap: .75rem; }
+	.footer-copy { font-size: 11px; }
+}
+
+/* Reveal animations for sections */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity 520ms ease, transform 520ms cubic-bezier(.2,.9,.2,1); will-change: transform, opacity; }
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+
+/* Navbar shrink on scroll */
+.mains-navbar.navbar-shrink { padding-top: .25rem; padding-bottom: .25rem; box-shadow: 0 12px 30px rgba(0,0,0,0.06); transition: padding 220ms ease, box-shadow 220ms ease; }
+
+/* Back to top button */
+#backToTop { position: fixed; right: 18px; bottom: 22px; z-index: 2000; display: inline-flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:8px; box-shadow: 0 10px 30px rgba(0,0,0,0.18); opacity:0; transform: translateY(8px); transition: opacity 220ms ease, transform 220ms ease; }
+#backToTop.show { opacity: 1; transform: translateY(0); }
+#backToTop svg { width:18px; height:18px; }
+
+/* Sponsor list: horizontal, centered, with hover + responsive sizing */
+.list-sponsor{
+	display: flex;
+	flex-wrap: wrap; /* allow logos to wrap on smaller screens */
+	align-items: center;
+	justify-content: center; /* center logos and rely on gap for spacing */
+	gap: 3rem; /* increased spacing between logos */
+	overflow: hidden; /* keep long lists clipped */
+	padding: 1rem 0;
+}
+.list-sponsor .sponsor-logo{
+	max-height: 120px;
+	width: auto;
+	transition: transform 220ms cubic-bezier(.2,.9,.2,1), filter 180ms ease, box-shadow 220ms ease;
+	will-change: transform;
+	cursor: pointer;
+	display: inline-block;
+	/* add explicit spacing between logos (desktop) */
+	margin: 0.6rem 2rem;
+	flex: 0 0 auto; /* don't stretch logos */
+}
+.list-sponsor .sponsor-logo:hover{
+	transform: translateY(-6px) scale(1.06);
+	filter: brightness(1.04);
+}
+
+@media (max-width: 768px){
+	/* On smaller screens center and allow horizontal scrolling */
+	.list-sponsor{justify-content:center; gap:1.5rem}
+	.list-sponsor .sponsor-logo{max-height:72px; margin:0.5rem 1.25rem}
+}
+@media (max-width: 420px){
+	.list-sponsor{gap:0.8rem}
+	.list-sponsor .sponsor-logo{max-height:44px; margin:0.35rem 0.8rem}
+}
+
+/* Photo gallery carousel styles (Bootstrap-friendly) */
+.photo-carousel{display:block; overflow:hidden; border-radius:8px}
+.photo-carousel .carousel-inner,
+.photo-carousel .carousel-item{height:100%}
+.carousel-img{
+	width:100%;
+	height:100%;
+	object-fit:cover;
+	display:block;
+	cursor: zoom-in;
+}
+.carousel-thumb{cursor: zoom-in}
+
+/* Make the placeholder use Bootstrap spacing; keep it light so cards inside control height */
+.placeholder-box{
+	background: #ffffff; /* pure white as requested */
+	border: 1px solid rgba(0,0,0,0.06);
+	border-radius:8px;
+	color: #333;
+}
+
+/* Wrapper that keeps sponsors 'in between' the page edges */
+.sponsor-wrap{
+	/* allow the sponsor wrap to use the full width (max weight) */
+	max-width: none;
+	width: 100%;
+	background: #f8f9fa; /* subtle contrast against section */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.75rem 2rem;
+	border-radius: 0; /* full-width block — no rounded corners */
+}
+
+/* Make the sponsor list horizontally scrollable if it overflows on very small screens */
+.sponsor-wrap .list-sponsor{
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+.sponsor-wrap .list-sponsor::-webkit-scrollbar{height:6px}
+.sponsor-wrap .list-sponsor::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.08);border-radius:3px}
+
+/* Social icon buttons inside sponsors area */
+.social-icons .social-link{
+	width:48px;
+	height:48px;
+	display:inline-flex;
+	align-items:center;
+	justify-content:center;
+	border-radius:8px;
+	text-decoration:none;
+	transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.social-icons .social-link svg{width:22px;height:22px;fill:#fff;display:block}
+.social-icons .social-link:hover{transform: translateY(-4px);box-shadow:0 10px 30px rgba(0,0,0,0.12)}
+.social-link.fb{background:#1877F2}
+.social-link.ig{background:#E4405F}
+.social-link.id{background:#0B63A5}
+.social-link.yp{background:#C41200}
+
+@media (max-width:576px){
+	.social-icons .social-link{width:40px;height:40px}
+	.social-icons .social-link svg{width:18px;height:18px}
+}
+
+/* Contact section styling */
+.container-contact{max-width:1100px;margin:0 auto}
+.container-contact h1{font-weight:600;letter-spacing:1px}
+.contact-form{background:transparent}
+.contact-form .form-label{font-weight:500}
+.btn-send{background:#eee;border-radius:26px;border:none;font-weight:700}
+.btn-send:hover{transform:translateY(-2px)}
+.contact-info{background:transparent}
+.whatsapp-btn{
+	background:#2f5c59;color:#fff;padding:10px 16px;border-radius:36px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;font-weight:600
+}
+.whatsapp-btn svg{width:20px;height:20px}
+
+@media (max-width:768px){
+	.whatsapp-btn{display:inline-flex}
+}
+
+/* Modal image centering and rounded-profile support */
+.modal-body{display:flex;align-items:center;justify-content:center;padding:1rem}
+#imageModalImg.rounded-modal{border-radius:50%;max-width:420px;width:100%;height:auto;box-shadow:none}
